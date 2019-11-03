@@ -52,7 +52,7 @@ function buildCharts(sample) {
       type: 'pie'
     };
     var pieLayout = {
-      title: `Samples for #${sample}`,
+      title: `Samples Collected from Participant #${sample}`,
     };
     Plotly.newPlot("pie", [pieData], pieLayout);
 
@@ -68,9 +68,9 @@ function buildCharts(sample) {
       text: otu_labels
     };
     var bubbleLayout = {
-      title: `Frequency of Bacteria for Sample#${sample}`,
-      xaxis: {title: "OTU ID's"},
-      yaxis: {title: "Frequency of Bacteria/Archaea Found"},
+      title: `Bacteria/Archaea Found in Participant #${sample}`,
+      xaxis: {title: "OTU (Bacteria/Archaea) ID's"},
+      yaxis: {title: "Sample Frequency"},
       showlegend: false,
     };
     Plotly.newPlot('bubble', [bubbleData], bubbleLayout);
