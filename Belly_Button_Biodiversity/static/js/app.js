@@ -3,17 +3,33 @@ function buildMetadata(sample) {
   // @TODO: Complete the following function that builds the metadata panel
 
   // Use `d3.json` to fetch the metadata for a sample
+  var metadataUrl = `/metadata/${sample}`;
+  d3.json(metadataUrl).then(function(data){
+    var dict = Object.entries(data)
+    console.log(data)
+
     // Use d3 to select the panel with id of `#sample-metadata`
+    var metadataPanel = d3.select("#sample-metadata");
 
     // Use `.html("") to clear any existing metadata
+    metadataPanel.html("");
 
     // Use `Object.entries` to add each key and value pair to the panel
     // Hint: Inside the loop, you will need to use d3 to append new
     // tags for each key-value in the metadata.
+    // var list = metadataPanel.append("ul")
+    dict.map((d, i) => {
+      console.log(d, i)
+      var item = metadataPanel.append("p");
+      item.html(`<b>${d[0]}:</b> ${d[1]}`);
+    })
+
+  });
+
 
     // BONUS: Build the Gauge Chart
     // buildGauge(data.WFREQ);
-}
+};
 
 function buildCharts(sample) {
 
@@ -48,9 +64,9 @@ function init() {
 
 function optionChanged(newSample) {
   // Fetch new data each time a new sample is selected
-  buildCharts(newSample);
+  // buildCharts(newSample);
   buildMetadata(newSample);
-}
+};
 
 // Initialize the dashboard
 init();
