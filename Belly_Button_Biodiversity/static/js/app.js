@@ -6,7 +6,7 @@ function buildMetadata(sample) {
   var metadataUrl = `/metadata/${sample}`;
   d3.json(metadataUrl).then(function(data){
     var dict = Object.entries(data)
-    console.log(data)
+    // console.log(data)
 
     // Use d3 to select the panel with id of `#sample-metadata`
     var metadataPanel = d3.select("#sample-metadata");
@@ -17,9 +17,9 @@ function buildMetadata(sample) {
     // Use `Object.entries` to add each key and value pair to the panel
     // Hint: Inside the loop, you will need to use d3 to append new
     // tags for each key-value in the metadata.
-    // var list = metadataPanel.append("ul")
     dict.map((d, i) => {
-      console.log(d, i)
+      // console.log(d, i)
+      // Add new p for each item in dictionary
       var item = metadataPanel.append("p");
       item.html(`<b>${d[0]}:</b> ${d[1]}`);
     })
@@ -34,12 +34,47 @@ function buildMetadata(sample) {
 function buildCharts(sample) {
 
   // @TODO: Use `d3.json` to fetch the sample data for the plots
+  var samplePath = `/samples/${sample}`;
+  d3.json(samplePath).then(data => {
+    console.log(data)
+    
+    // Slice top 10 from each array
+    var sample_values = data.sample_values.slice(0, 10);
+    var otu_ids = data.otu_ids.slice(0, 10);
+    var otu_labels = data.otu_labels.slice(0, 10);
+    console.log(sample_values, otu_ids, otu_labels);
 
-    // @TODO: Build a Bubble Chart using the sample data
+    // PLOT PIE CHART
+    var pieData = {
+      labels: otu_ids,
+      values: sample_values,
+      hovertext: otu_labels,
+      type: 'pie'
+    };
+    var pieLayout = {
+      title: `Samples for #${sample}`,
+    };
+    Plotly.newPlot("pie", [pieData], pieLayout);
 
-    // @TODO: Build a Pie Chart
-    // HINT: You will need to use slice() to grab the top 10 sample_values,
-    // otu_ids, and labels (10 each).
+    // PLOT BUBBLE CHART
+    var bubbleData = {
+      x: otu_ids,
+      y: sample_values,
+      mode: 'markers',
+      marker: {
+        color: otu_ids,
+        size: sample_values
+      },
+      text: otu_labels
+    };
+    var bubbleLayout = {
+      title: `Frequency of Bacteria for Sample#${sample}`,
+      xaxis: {title: "OTU ID's"},
+      yaxis: {title: "Frequency of Bacteria/Archaea Found"},
+      showlegend: false,
+    };
+    Plotly.newPlot('bubble', [bubbleData], bubbleLayout);
+  });
 }
 
 function init() {
@@ -64,7 +99,7 @@ function init() {
 
 function optionChanged(newSample) {
   // Fetch new data each time a new sample is selected
-  // buildCharts(newSample);
+  buildCharts(newSample);
   buildMetadata(newSample);
 };
 
